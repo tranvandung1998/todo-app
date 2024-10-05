@@ -10,16 +10,20 @@ Currently, two official plugins are available:
 # React + Vite Todo Application
 
 ## Giới thiệu
-Đây là một ứng dụng quản lý tác vụ đơn giản (To-Do List) được xây dựng bằng React và Vite. Ứng dụng hỗ trợ các chức năng thêm, xem và lọc các tác vụ. 
+
+Đây là một ứng dụng quản lý tác vụ đơn giản (To-Do List) được xây dựng bằng React và Vite. Ứng dụng hỗ trợ các chức năng thêm, xem và lọc các tác vụ.
 
 ## Các thư viện được sử dụng
+
 - React
 - Ant Design
 - Axios
 - JSON Server
 
 ## Chạy JSON Server:
+
 - npm run start
 
 ## Chạy ứng dụng Vite:
+
 - npm run dev

@@ -1,7 +1,15 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Button, Checkbox, Input, List, Tabs, Typography, notification } from "antd";
-import styled from "styled-components";
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import {
+  Button,
+  Checkbox,
+  Input,
+  List,
+  Tabs,
+  Typography,
+  notification,
+} from 'antd';
+import styled from 'styled-components';
 
 const { TabPane } = Tabs;
 const { Title } = Typography;
@@ -45,16 +53,16 @@ const StyledList = styled(List)`
 
 const TodoApp = () => {
   const [tasks, setTasks] = useState([]);
-  const [newTask, setNewTask] = useState("");
-  const [filter, setFilter] = useState("All");
+  const [newTask, setNewTask] = useState('');
+  const [filter, setFilter] = useState('All');
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get("http://localhost:5002/tasks");
+        const response = await axios.get('http://localhost:5002/tasks');
         setTasks(response.data);
       } catch (error) {
-        console.error("Lỗi khi lấy danh sách tác vụ:", error);
+        console.error('Lỗi khi lấy danh sách tác vụ:', error);
       }
     };
 
@@ -65,20 +73,23 @@ const TodoApp = () => {
     if (newTask.trim()) {
       const taskToAdd = { title: newTask, completed: false };
       try {
-        const response = await axios.post("http://localhost:5002/tasks", taskToAdd);
+        const response = await axios.post(
+          'http://localhost:5002/tasks',
+          taskToAdd
+        );
         setTasks([...tasks, response.data]);
-        setNewTask("");
+        setNewTask('');
       } catch (error) {
-        console.error("Lỗi khi thêm tác vụ:", error);
+        console.error('Lỗi khi thêm tác vụ:', error);
         notification.error({
-          message: "Thêm tác vụ thất bại",
-          description: "Đã xảy ra lỗi khi thêm tác vụ mới.",
+          message: 'Thêm tác vụ thất bại',
+          description: 'Đã xảy ra lỗi khi thêm tác vụ mới.',
         });
       }
     } else {
       notification.warning({
-        message: "Tác vụ rỗng",
-        description: "Vui lòng nhập một tác vụ để thêm.",
+        message: 'Tác vụ rỗng',
+        description: 'Vui lòng nhập một tác vụ để thêm.',
       });
     }
   };
@@ -92,19 +103,21 @@ const TodoApp = () => {
     const taskToUpdate = updatedTasks.find((task) => task.id === id);
 
     notification.open({
-      message: taskToUpdate.completed ? "Tác vụ đã hoàn thành!" : "Tác vụ chưa hoàn thành!",
+      message: taskToUpdate.completed
+        ? 'Tác vụ đã hoàn thành!'
+        : 'Tác vụ chưa hoàn thành!',
       description: `Bạn đã đánh dấu tác vụ "${taskToUpdate.title}" là ${
-        taskToUpdate.completed ? "hoàn thành" : "chưa hoàn thành"
+        taskToUpdate.completed ? 'hoàn thành' : 'chưa hoàn thành'
       }.`,
       onClick: () => {
-        console.log("Thông báo đã được nhấn!");
+        console.log('Thông báo đã được nhấn!');
       },
     });
 
     try {
       await axios.put(`http://localhost:5002/tasks/${id}`, taskToUpdate);
     } catch (error) {
-      console.error("Lỗi khi cập nhật tác vụ:", error);
+      console.error('Lỗi khi cập nhật tác vụ:', error);
     }
   };
 
@@ -112,9 +125,11 @@ const TodoApp = () => {
   const incompleteCount = tasks.filter((task) => !task.completed).length;
 
   const filteredTasks =
-    filter === "All"
+    filter === 'All'
       ? tasks
-      : tasks.filter((task) => (filter === "Completed" ? task.completed : !task.completed));
+      : tasks.filter((task) =>
+          filter === 'Completed' ? task.completed : !task.completed
+        );
 
   return (
     <Container>
@@ -130,10 +145,20 @@ const TodoApp = () => {
         </StyledButton>
 
         <StyledTabsWrapper>
-          <Tabs defaultActiveKey="All" onChange={(key) => setFilter(key)} centered>
+          <Tabs
+            defaultActiveKey="All"
+            onChange={(key) => setFilter(key)}
+            centered
+          >
             <TabPane tab={`Tất cả (${tasks.length})`} key="All" />
-            <TabPane tab={`Đã hoàn thành (${completedCount})`} key="Completed" />
-            <TabPane tab={`Chưa hoàn thành (${incompleteCount})`} key="Incomplete" />
+            <TabPane
+              tab={`Đã hoàn thành (${completedCount})`}
+              key="Completed"
+            />
+            <TabPane
+              tab={`Chưa hoàn thành (${incompleteCount})`}
+              key="Incomplete"
+            />
           </Tabs>
         </StyledTabsWrapper>
 
@@ -142,7 +167,10 @@ const TodoApp = () => {
           dataSource={filteredTasks}
           renderItem={(task) => (
             <List.Item>
-              <Checkbox checked={task.completed} onChange={() => toggleCompletion(task.id)}>
+              <Checkbox
+                checked={task.completed}
+                onChange={() => toggleCompletion(task.id)}
+              >
                 {task.title}
               </Checkbox>
             </List.Item>
