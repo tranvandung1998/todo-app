@@ -8,6 +8,7 @@ import {
   Tabs,
   Typography,
   notification,
+  Pagination,
 } from 'antd';
 import styled from 'styled-components';
 
@@ -55,6 +56,8 @@ const TodoApp = () => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
   const [filter, setFilter] = useState('All');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(5);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -131,6 +134,9 @@ const TodoApp = () => {
           filter === 'Completed' ? task.completed : !task.completed
         );
 
+  const startIndex = (currentPage - 1) * pageSize;
+  const currentTasks = filteredTasks.slice(startIndex, startIndex + pageSize);
+
   return (
     <Container>
       <ContentWrapper>
@@ -164,7 +170,7 @@ const TodoApp = () => {
 
         <StyledList
           bordered
-          dataSource={filteredTasks}
+          dataSource={currentTasks}
           renderItem={(task) => (
             <List.Item>
               <Checkbox
@@ -176,6 +182,16 @@ const TodoApp = () => {
             </List.Item>
           )}
         />
+
+        {filteredTasks.length > pageSize && (
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={filteredTasks.length}
+            onChange={(page) => setCurrentPage(page)}
+            style={{ marginTop: 20, textAlign: 'center' }}
+          />
+        )}
       </ContentWrapper>
     </Container>
   );

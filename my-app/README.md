@@ -27,3 +27,6 @@ Currently, two official plugins are available:
 ## Chạy ứng dụng Vite:
 
 - npm run dev
+
+## Tính năng bổ sung 
+-  Nếu trên 5 tác vụ thì sẽ hiển thị pagination
