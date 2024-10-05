@@ -1,10 +1,47 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios"; // Import axios
+import axios from "axios";
 import { Button, Checkbox, Input, List, Tabs, Typography, notification } from "antd";
-import "antd/dist/reset.css";
+import styled from "styled-components";
 
 const { TabPane } = Tabs;
 const { Title } = Typography;
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+`;
+
+const ContentWrapper = styled.div`
+  padding: 20px;
+  width: 100%;
+  max-width: 600px;
+`;
+
+const StyledTabsWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+`;
+
+const StyledTitle = styled(Title)`
+  text-align: center;
+`;
+
+const StyledInput = styled(Input)`
+  width: 100%;
+  margin-bottom: 10px;
+`;
+
+const StyledButton = styled(Button)`
+  width: 100%;
+`;
+
+const StyledList = styled(List)`
+  margin-top: 20px;
+`;
 
 const TodoApp = () => {
   const [tasks, setTasks] = useState([]);
@@ -45,12 +82,6 @@ const TodoApp = () => {
       });
     }
   };
-  
-
-  const filteredTasks =
-    filter === "All"
-      ? tasks
-      : tasks.filter((task) => (filter === "Completed" ? task.completed : !task.completed));
 
   const toggleCompletion = async (id) => {
     const updatedTasks = tasks.map((task) =>
@@ -58,7 +89,7 @@ const TodoApp = () => {
     );
     setTasks(updatedTasks);
 
-    const taskToUpdate = updatedTasks.find(task => task.id === id);
+    const taskToUpdate = updatedTasks.find((task) => task.id === id);
 
     notification.open({
       message: taskToUpdate.completed ? "Tác vụ đã hoàn thành!" : "Tác vụ chưa hoàn thành!",
@@ -70,7 +101,6 @@ const TodoApp = () => {
       },
     });
 
-    // Simulate PUT request to update the task (optional)
     try {
       await axios.put(`http://localhost:5002/tasks/${id}`, taskToUpdate);
     } catch (error) {
@@ -78,48 +108,48 @@ const TodoApp = () => {
     }
   };
 
+  const completedCount = tasks.filter((task) => task.completed).length;
+  const incompleteCount = tasks.filter((task) => !task.completed).length;
+
+  const filteredTasks =
+    filter === "All"
+      ? tasks
+      : tasks.filter((task) => (filter === "Completed" ? task.completed : !task.completed));
+
   return (
-    <div style={{ 
-      display: "flex", 
-      justifyContent: "center", 
-      alignItems: "center", 
-      height: "100vh" 
-    }}>
-      <div style={{ padding: "20px", width: "400px" }}>
-        <Title level={2}>Ứng dụng Quản lý Tác vụ</Title>
-        <Input
+    <Container>
+      <ContentWrapper>
+        <StyledTitle level={2}>Ứng dụng Quản lý Tác vụ</StyledTitle>
+        <StyledInput
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
           placeholder="Thêm một tác vụ mới"
-          style={{ width: "100%", marginBottom: "10px" }}
         />
-        <Button type="primary" onClick={addTask} style={{ width: "100%" }}>
+        <StyledButton type="primary" onClick={addTask}>
           Thêm Tác vụ
-        </Button>
+        </StyledButton>
 
-        <Tabs defaultActiveKey="All" onChange={(key) => setFilter(key)} style={{ marginTop: "20px" }}>
-          <TabPane tab="Tất cả" key="All" />
-          <TabPane tab="Đã hoàn thành" key="Completed" />
-          <TabPane tab="Chưa hoàn thành" key="Incomplete" />
-        </Tabs>
+        <StyledTabsWrapper>
+          <Tabs defaultActiveKey="All" onChange={(key) => setFilter(key)} centered>
+            <TabPane tab={`Tất cả (${tasks.length})`} key="All" />
+            <TabPane tab={`Đã hoàn thành (${completedCount})`} key="Completed" />
+            <TabPane tab={`Chưa hoàn thành (${incompleteCount})`} key="Incomplete" />
+          </Tabs>
+        </StyledTabsWrapper>
 
-        <List
-          style={{ marginTop: "20px" }}
+        <StyledList
           bordered
           dataSource={filteredTasks}
           renderItem={(task) => (
             <List.Item>
-              <Checkbox
-                checked={task.completed}
-                onChange={() => toggleCompletion(task.id)}
-              >
+              <Checkbox checked={task.completed} onChange={() => toggleCompletion(task.id)}>
                 {task.title}
               </Checkbox>
             </List.Item>
           )}
         />
-      </div>
-    </div>
+      </ContentWrapper>
+    </Container>
   );
 };
 

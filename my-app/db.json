@@ -2,18 +2,18 @@
   "tasks": [
     {
       "id": "1",
-      "title": "Learn React",
+      "title": "Tác vụ 1",
       "completed": false
     },
     {
       "id": "2",
-      "title": "Build a Todo App",
-      "completed": false
+      "title": "Tác vụ 2",
+      "completed": true
     },
     {
-      "id": "eb4e",
-      "title": "tesst",
-      "completed": false
+      "id": "ef24",
+      "title": "Tác vụ 3",
+      "completed": true
     }
   ]
 }
