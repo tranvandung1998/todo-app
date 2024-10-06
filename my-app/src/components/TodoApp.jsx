@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import {
   Button,
   Checkbox,
@@ -10,6 +9,7 @@ import {
   notification,
   Pagination,
 } from 'antd';
+import { getDataToDo, postDataToDo, putDataToDo } from '../api/TodoApi';
 import styled from 'styled-components';
 
 const { TabPane } = Tabs;
@@ -62,8 +62,8 @@ const TodoApp = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get('http://localhost:5002/tasks');
-        setTasks(response.data);
+        const response = await getDataToDo();
+        setTasks(response);
       } catch (error) {
         console.error('Lỗi khi lấy danh sách tác vụ:', error);
       }
@@ -76,11 +76,8 @@ const TodoApp = () => {
     if (newTask.trim()) {
       const taskToAdd = { title: newTask, completed: false };
       try {
-        const response = await axios.post(
-          'http://localhost:5002/tasks',
-          taskToAdd
-        );
-        setTasks([...tasks, response.data]);
+        const response = await postDataToDo(taskToAdd);
+        setTasks([...tasks, response]);
         setNewTask('');
       } catch (error) {
         console.error('Lỗi khi thêm tác vụ:', error);
@@ -104,7 +101,6 @@ const TodoApp = () => {
     setTasks(updatedTasks);
 
     const taskToUpdate = updatedTasks.find((task) => task.id === id);
-
     notification.open({
       message: taskToUpdate.completed
         ? 'Tác vụ đã hoàn thành!'
@@ -118,7 +114,7 @@ const TodoApp = () => {
     });
 
     try {
-      await axios.put(`http://localhost:5002/tasks/${id}`, taskToUpdate);
+      await putDataToDo(id, taskToUpdate);
     } catch (error) {
       console.error('Lỗi khi cập nhật tác vụ:', error);
     }
